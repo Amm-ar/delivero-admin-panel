@@ -1,6 +1,6 @@
 class ApiConstants {
-  // Base URL - Change this to your server IP/domain
-  static const String baseUrl = 'http://localhost:5000';
+  // Production URL
+  static const String baseUrl = 'https://delivero-backend.onrender.com';
   static const String apiVersion = '/api';
   
   // API Endpoints
