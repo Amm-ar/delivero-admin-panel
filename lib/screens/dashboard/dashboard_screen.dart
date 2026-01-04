@@ -5,7 +5,9 @@ import '../../config/constants.dart';
 import '../../providers/admin_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../users/users_screen.dart';
+import '../restaurants/restaurants_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -30,6 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final screens = [
       const DashboardTab(),
       const UsersScreen(),
+      const RestaurantsScreen(),
       const AnalyticsTab(),
     ];
 
@@ -69,6 +72,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 icon: Icon(Icons.people_outline),
                 selectedIcon: Icon(Icons.people),
                 label: Text('Users'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.store_outlined),
+                selectedIcon: Icon(Icons.store),
+                label: Text('Restaurants'),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.analytics_outlined),
@@ -194,28 +202,118 @@ class DashboardTab extends StatelessWidget {
 }
 
 // Analytics Tab
-class AnalyticsTab extends StatelessWidget {
+class AnalyticsTab extends StatefulWidget {
   const AnalyticsTab({super.key});
 
   @override
+  State<AnalyticsTab> createState() => _AnalyticsTabState();
+}
+
+class _AnalyticsTabState extends State<AnalyticsTab> {
+  String _period = 'week';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AdminProvider>(context, listen: false).fetchAnalytics(period: _period);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.analytics, size: 80, color: AppColors.gray),
-          const SizedBox(height: 16),
-          Text(
-            'Revenue Analytics',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColors.gray),
+    return Consumer<AdminProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(child: CircularProgressIndicator(color: AppColors.nileBlue));
+        }
+
+        final analytics = provider.analytics as List? ?? [];
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                   Text('Revenue Portfolio', style: AppTextStyles.h3),
+                   DropdownButton<String>(
+                     value: _period,
+                     items: const [
+                       DropdownMenuItem(value: 'week', child: Text('Last 7 Days')),
+                       DropdownMenuItem(value: 'month', child: Text('Last 30 Days')),
+                       DropdownMenuItem(value: 'year', child: Text('Last Year')),
+                     ],
+                     onChanged: (val) {
+                       if (val != null) {
+                         setState(() => _period = val);
+                         provider.fetchAnalytics(period: val);
+                       }
+                     },
+                   ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              
+              // Revenue Line Chart
+              Container(
+                height: 400,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: LineChart(
+                  LineChartData(
+                    gridData: FlGridData(
+                      show: true,
+                      drawVerticalLine: true,
+                      horizontalInterval: 1,
+                      verticalInterval: 1,
+                      getDrawingHorizontalLine: (value) => const FlLine(color: Color(0xffe7e8ec), strokeWidth: 1),
+                      getDrawingVerticalLine: (value) => const FlLine(color: Color(0xffe7e8ec), strokeWidth: 1),
+                    ),
+                    titlesData: const FlTitlesData(
+                      show: true,
+                      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    ),
+                    borderData: FlBorderData(
+                      show: true,
+                      border: Border.all(color: const Color(0xff37434d), width: 1),
+                    ),
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: analytics.asMap().entries.map((e) {
+                          return FlSpot(e.key.toDouble(), (e.value['revenue'] as num).toDouble());
+                        }).toList(),
+                        isCurved: true,
+                        color: AppColors.palmGreen,
+                        barWidth: 5,
+                        isStrokeCapRound: true,
+                        dotData: const FlDotData(show: false),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          color: AppColors.palmGreen.withOpacity(0.3),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Charts and detailed analytics coming soon',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.gray),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
