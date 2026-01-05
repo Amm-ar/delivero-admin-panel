@@ -21,15 +21,6 @@ class ApiService {
       ),
     );
 
-    // Checklist/Debugging Notes:
-    // - [x] Fix logo 404 error
-    // - [x] Fix admin registration 400 error (Verified logic, added logging)
-    // - [x] Fix app reload issue (Refactored navigation)
-    // - [/] Verify fixes with user
-    //     - [x] Improve API logging for debugging (related to 401 error debugging)
-    //     - [x] Seed default admin account (locally)
-    //     - [ ] Request user to test and provide logs if needed
-
     // Add interceptors
     _dio.interceptors.add(
       InterceptorsWrapper(
