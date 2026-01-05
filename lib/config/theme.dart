@@ -67,12 +67,10 @@ class AppTheme {
         secondaryContainer: AppColors.sunsetAmberLight,
         tertiary: AppColors.palmGreen,
         surface: AppColors.white,
-        background: AppColors.offWhite,
         error: AppColors.error,
         onPrimary: AppColors.white,
         onSecondary: AppColors.black,
         onSurface: AppColors.black,
-        onBackground: AppColors.black,
         onError: AppColors.white,
       ),
       
@@ -91,7 +89,7 @@ class AppTheme {
       ),
       
       // Card Theme
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -205,12 +203,10 @@ class AppTheme {
         secondaryContainer: AppColors.sunsetAmberDark,
         tertiary: AppColors.palmGreen,
         surface: Color(0xFF1E1E1E),
-        background: Color(0xFF121212),
         error: AppColors.error,
         onPrimary: AppColors.black,
         onSecondary: AppColors.black,
         onSurface: AppColors.white,
-        onBackground: AppColors.white,
         onError: AppColors.white,
       ),
       
@@ -222,7 +218,7 @@ class AppTheme {
         iconTheme: IconThemeData(color: AppColors.nileBlueLight),
       ),
       
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),

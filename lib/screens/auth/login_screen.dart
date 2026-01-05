@@ -4,7 +4,7 @@ import '../../config/constants.dart';
 import '../../providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'register_screen.dart';
-import '../home/home_screen.dart';
+import '../dashboard/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (success && mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
       );
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

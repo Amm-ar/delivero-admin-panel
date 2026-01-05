@@ -8,6 +8,8 @@ import '../users/users_screen.dart';
 import '../restaurants/restaurants_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../providers/locale_provider.dart';
+import '../../l10n/app_localizations.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -46,6 +48,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Provider.of<AdminProvider>(context, listen: false).fetchStats();
             },
           ),
+          PopupMenuButton<Locale>(
+            icon: const Icon(Icons.language),
+            onSelected: (Locale locale) {
+              Provider.of<LocaleProvider>(context, listen: false).setLocale(locale);
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: Locale('en'),
+                child: Text('English'),
+              ),
+              const PopupMenuItem(
+                value: Locale('ar'),
+                child: Text('العربية'),
+              ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
@@ -62,26 +80,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
               setState(() => _selectedIndex = index);
             },
             labelType: NavigationRailLabelType.all,
-            destinations: const [
+            destinations: [
               NavigationRailDestination(
-                icon: Icon(Icons.dashboard_outlined),
-                selectedIcon: Icon(Icons.dashboard),
-                label: Text('Dashboard'),
+                icon: const Icon(Icons.dashboard_outlined),
+                selectedIcon: const Icon(Icons.dashboard),
+                label: Text(AppLocalizations.of(context)!.dashboard),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.people_outline),
-                selectedIcon: Icon(Icons.people),
-                label: Text('Users'),
+                icon: const Icon(Icons.people_outline),
+                selectedIcon: const Icon(Icons.people),
+                label: Text(AppLocalizations.of(context)!.users),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.store_outlined),
-                selectedIcon: Icon(Icons.store),
-                label: Text('Restaurants'),
+                icon: const Icon(Icons.store_outlined),
+                selectedIcon: const Icon(Icons.store),
+                label: Text(AppLocalizations.of(context)!.restaurants),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.analytics_outlined),
-                selectedIcon: Icon(Icons.analytics),
-                label: Text('Analytics'),
+                icon: const Icon(Icons.analytics_outlined),
+                selectedIcon: const Icon(Icons.analytics),
+                label: Text(AppLocalizations.of(context)!.analytics),
               ),
             ],
           ),
@@ -116,7 +134,7 @@ class DashboardTab extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Platform Overview',
+                AppLocalizations.of(context)!.platformOverview,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 24),
@@ -134,60 +152,60 @@ class DashboardTab extends StatelessWidget {
                     childAspectRatio: 1.5,
                     children: [
                       StatCard(
-                        title: 'Total Orders',
+                        title: AppLocalizations.of(context)!.totalOrders,
                         value: '${stats['totalOrders'] ?? 0}',
                         icon: Icons.shopping_bag,
                         color: AppColors.nileBlue,
-                        subtitle: 'All time',
+                        subtitle: AppLocalizations.of(context)!.allTime,
                       ),
                       StatCard(
-                        title: 'Total Revenue',
+                        title: AppLocalizations.of(context)!.totalRevenue,
                         value: '${AppConstants.currencySymbol} ${(stats['totalRevenue'] ?? 0).toStringAsFixed(2)}',
                         icon: Icons.attach_money,
                         color: AppColors.palmGreen,
-                        subtitle: 'Platform earnings',
+                        subtitle: AppLocalizations.of(context)!.platformEarnings,
                       ),
                       StatCard(
-                        title: 'Active Restaurants',
+                        title: AppLocalizations.of(context)!.activeRestaurants,
                         value: '${stats['activeRestaurants'] ?? 0}',
                         icon: Icons.restaurant,
                         color: AppColors.sunsetAmber,
-                        subtitle: 'Verified',
+                        subtitle: AppLocalizations.of(context)!.verified,
                       ),
                       StatCard(
-                        title: 'Active Drivers',
+                        title: AppLocalizations.of(context)!.activeDrivers,
                         value: '${stats['activeDrivers'] ?? 0}',
                         icon: Icons.delivery_dining,
                         color: AppColors.riverTeal,
-                        subtitle: 'Online now',
+                        subtitle: AppLocalizations.of(context)!.onlineNow,
                       ),
                       StatCard(
-                        title: 'Total Customers',
+                        title: AppLocalizations.of(context)!.totalCustomers,
                         value: '${stats['totalCustomers'] ?? 0}',
                         icon: Icons.people,
                         color: AppColors.nileBlue,
-                        subtitle: 'Registered',
+                        subtitle: AppLocalizations.of(context)!.registered,
                       ),
                       StatCard(
-                        title: 'Orders Today',
+                        title: AppLocalizations.of(context)!.ordersToday,
                         value: '${stats['ordersToday'] ?? 0}',
                         icon: Icons.today,
                         color: AppColors.palmGreen,
                         subtitle: DateFormat('MMM dd, yyyy').format(DateTime.now()),
                       ),
                       StatCard(
-                        title: 'Avg Order Value',
+                        title: AppLocalizations.of(context)!.avgOrderValue,
                         value: '${AppConstants.currencySymbol} ${(stats['averageOrderValue'] ?? 0).toStringAsFixed(2)}',
                         icon: Icons.trending_up,
                         color: AppColors.sunsetAmber,
-                        subtitle: 'Per order',
+                        subtitle: AppLocalizations.of(context)!.perOrder,
                       ),
                       StatCard(
-                        title: 'Commission Rate',
+                        title: AppLocalizations.of(context)!.commissionRate,
                         value: '20%',
                         icon: Icons.percent,
                         color: AppColors.riverTeal,
-                        subtitle: 'From restaurants',
+                        subtitle: AppLocalizations.of(context)!.fromRestaurants,
                       ),
                     ],
                   );
@@ -238,13 +256,13 @@ class _AnalyticsTabState extends State<AnalyticsTab> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Text('Revenue Portfolio', style: AppTextStyles.h3),
+                   Text(AppLocalizations.of(context)!.revenuePortfolio, style: AppTextStyles.h3),
                    DropdownButton<String>(
                      value: _period,
-                     items: const [
-                       DropdownMenuItem(value: 'week', child: Text('Last 7 Days')),
-                       DropdownMenuItem(value: 'month', child: Text('Last 30 Days')),
-                       DropdownMenuItem(value: 'year', child: Text('Last Year')),
+                     items: [
+                       DropdownMenuItem(value: 'week', child: Text(AppLocalizations.of(context)!.last7Days)),
+                       DropdownMenuItem(value: 'month', child: Text(AppLocalizations.of(context)!.last30Days)),
+                       DropdownMenuItem(value: 'year', child: Text(AppLocalizations.of(context)!.lastYear)),
                      ],
                      onChanged: (val) {
                        if (val != null) {
@@ -377,7 +395,7 @@ class StatCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: Theme.of(context).textTheme.caption?.copyWith(
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppColors.gray,
               ),
             ),

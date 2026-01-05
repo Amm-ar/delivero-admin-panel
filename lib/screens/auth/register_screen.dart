@@ -3,7 +3,7 @@ import '../../config/theme.dart';
 import '../../config/constants.dart';
 import '../../providers/auth_provider.dart';
 import 'package:provider/provider.dart';
-import '../home/home_screen.dart';
+import '../dashboard/dashboard_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -45,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (success && mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => DashboardScreen()),
       );
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
