@@ -44,10 +44,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     if (success && mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => DashboardScreen()),
-      );
+      // Navigation is handled by AuthWrapper in main.dart
+      print('Registration successful for: ${authProvider.user?.email}');
     } else if (mounted) {
+      print('Registration failed: ${authProvider.errorMessage}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(authProvider.errorMessage ?? 'Registration failed'),
