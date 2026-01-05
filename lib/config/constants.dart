@@ -32,6 +32,49 @@ class ApiConstants {
   // Timeouts
   static const Duration connectionTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
+
+  static const String defaultFoodImage = '$baseUrl/uploads/default-food.png';
+
+  // Helper to construct image URL safely
+  static String getImageUrl(String? imagePath) {
+    if (imagePath == null || imagePath.isEmpty || imagePath == 'default-food.png' || imagePath == 'default-restaurant.png') {
+      return defaultFoodImage;
+    }
+    
+    String path = imagePath;
+    
+    // Normalize slashes
+    path = path.replaceAll('\\\\', '/');
+    path = path.replaceAll('\\', '/');
+    
+    // If it's an absolute URL
+    if (path.startsWith('http')) {
+      // If it points to localhost (common in dev), replace with production baseUrl
+      if (path.contains('localhost') || path.contains('127.0.0.1') || path.contains('10.0.2.2')) {
+        final uploadsIndex = path.indexOf('/uploads/');
+        if (uploadsIndex != -1) {
+          path = path.substring(uploadsIndex + 1);
+        } else {
+          // If no uploads prefix, just use the path after the domain
+          final domainEnd = path.indexOf('/', 8); // Skip http://
+          if (domainEnd != -1) return '$baseUrl${path.substring(domainEnd)}';
+          return path;
+        }
+      } else {
+        return path;
+      }
+    }
+    
+    // Remove leading slash
+    if (path.startsWith('/')) path = path.substring(1);
+    
+    // Ensure uploads/ prefix unless it's already an api path
+    if (!path.startsWith('uploads/') && !path.startsWith('api/')) {
+      path = 'uploads/$path';
+    }
+    
+    return '$baseUrl/$path';
+  }
 }
 
 class AppConstants {
