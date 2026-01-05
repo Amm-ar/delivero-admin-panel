@@ -94,10 +94,14 @@ class AdminService {
   }
 
   // Verify restaurant
-  Future<Map<String, dynamic>> verifyRestaurant(String restaurantId) async {
+  Future<Map<String, dynamic>> verifyRestaurant(String restaurantId, {bool isActive = true, bool isVerified = true}) async {
     try {
       final response = await _apiService.put(
         '/api/admin/restaurants/$restaurantId/verify',
+        data: {
+          'isActive': isActive,
+          'isVerified': isVerified,
+        },
       );
 
       if (response.statusCode == 200 && response.data['success']) {

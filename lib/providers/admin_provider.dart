@@ -82,8 +82,8 @@ class AdminProvider with ChangeNotifier {
   }
 
   // Verify restaurant
-  Future<bool> verifyRestaurant(String restaurantId) async {
-    final result = await _adminService.verifyRestaurant(restaurantId);
+  Future<bool> verifyRestaurant(String restaurantId, {bool isActive = true, bool isVerified = true}) async {
+    final result = await _adminService.verifyRestaurant(restaurantId, isActive: isActive, isVerified: isVerified);
 
     if (result['success']) {
       await fetchUsers(role: 'restaurant'); // Refresh restaurants
